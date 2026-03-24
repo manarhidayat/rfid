@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/demo-uhf_bluetooth_as.iml" filepath="$PROJECT_DIR$/demo-uhf_bluetooth_as.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/demo-uhf_bluetooth_as.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/demo-uhf_bluetooth_as.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/demo-uhf_bluetooth_as.main.iml" filepath="$PROJECT_DIR$/.idea/modules/demo-uhf_bluetooth_as.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/demo-uhf_bluetooth_as.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/demo-uhf_bluetooth_as.unitTest.iml" />
+    </modules>
+  </component>
+</project>
