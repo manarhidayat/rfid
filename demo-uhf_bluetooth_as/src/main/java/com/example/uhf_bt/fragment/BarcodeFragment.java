@@ -16,7 +16,6 @@ import android.widget.TextView;
 import com.example.uhf_bt.MainActivity;
 import com.example.uhf_bt.R;
 import com.example.uhf_bt.Utils;
-import com.rscja.deviceapi.RFIDWithUHFBLE;
 import com.rscja.deviceapi.interfaces.ConnectionStatus;
 import com.rscja.deviceapi.interfaces.KeyEventCallback;
 
@@ -80,13 +79,12 @@ public class BarcodeFragment extends Fragment implements View.OnClickListener{
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.btnScan:
-                scan();
-                break;
-            case R.id.btClear:
-                tvData.setText("");
-                break;
+        int id = view.getId();
+
+        if (id == R.id.btn_connect) {
+            scan();
+        } else if (id == R.id.btClear) {
+            tvData.setText("");
         }
     }
 

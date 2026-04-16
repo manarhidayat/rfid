@@ -108,10 +108,11 @@ public class UHFUpdataFragment extends Fragment implements View.OnClickListener 
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.btSelect:
-                Intent intent = new Intent(mContext, FileManagerActivity.class);
-                startActivity(intent);
+        int id = view.getId();
+
+        if(id == R.id.btSelect) {
+            Intent intent = new Intent(mContext, FileManagerActivity.class);
+            startActivity(intent);
                 /*if (rbBLE.isChecked()) {
                     final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                     intent.setType("application/zip");
@@ -127,14 +128,11 @@ public class UHFUpdataFragment extends Fragment implements View.OnClickListener 
                         startActivityForResult(intent, SELECT_FILE_REQ);
                     }
                 }*/
-                break;
-            case R.id.btnUpdata:
-                update();
-                break;
-            case R.id.btnReadVere:
-                String v = mContext.uhf.getSTM32Version();//获取版本号
-                tvMsg.setText("version:" + v);
-                break;
+        } else if(id == R.id.btSelect) {
+            update();
+        } else if(id == R.id.btSelect) {
+            String v = mContext.uhf.getSTM32Version();//获取版本号
+            tvMsg.setText("version:" + v);
         }
     }
 

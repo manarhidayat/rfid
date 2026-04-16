@@ -67,16 +67,12 @@ public class UHFEraseFragment extends Fragment implements View.OnClickListener {
         rgFilterArea.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch (checkedId) {
-                    case R.id.rbEPC_filter:
-                        etPtr_filter.setText("32");
-                        break;
-                    case R.id.rbTID_filter:
-                        etPtr_filter.setText("0");
-                        break;
-                    case R.id.rbUser_filter:
-                        etPtr_filter.setText("0");
-                        break;
+                if (checkedId == R.id.rbEPC_filter) {
+                    etPtr_filter.setText("32");
+                } else if (checkedId == R.id.rbTID_filter) {
+                    etPtr_filter.setText("0");
+                } else if (checkedId == R.id.rbUser_filter) {
+                    etPtr_filter.setText("0");
                 }
             }
         });
@@ -126,11 +122,11 @@ public class UHFEraseFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btnErase:
-                erase();
-                break;
+        int id = v.getId();
+        if(id == R.id.btnErase) {
+            erase();
         }
+
     }
 
     /**

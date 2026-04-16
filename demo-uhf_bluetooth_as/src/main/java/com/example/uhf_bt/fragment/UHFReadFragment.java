@@ -116,25 +116,22 @@ public class UHFReadFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.rbEPC_filter:
-                if (rbEPC_filter.isChecked()) {
-                    etPtr_filter.setText("32");
-                }
-                break;
-            case R.id.rbTID_filter:
-                if (rbTID_filter.isChecked()) {
-                    etPtr_filter.setText("0");
-                }
-                break;
-            case R.id.rbUser_filter:
-                if (rbUser_filter.isChecked()) {
-                    etPtr_filter.setText("0");
-                }
-                break;
-            case R.id.BtRead:
-                read();
-                break;
+        int id = view.getId();
+
+        if (id == R.id.rbEPC_filter) {
+            if (rbEPC_filter.isChecked()) {
+                etPtr_filter.setText("32");
+            }
+        } else if(id == R.id.rbTID_filter) {
+            if (rbTID_filter.isChecked()) {
+                etPtr_filter.setText("0");
+            }
+        } else if(id == R.id.rbUser_filter) {
+            if (rbUser_filter.isChecked()) {
+                etPtr_filter.setText("0");
+            }
+        } else if(id == R.id.BtRead) {
+            read();
         }
     }
 

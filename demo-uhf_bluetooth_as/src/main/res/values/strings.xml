@@ -187,7 +187,6 @@
     <string name="uhf_title_dbm">dBm</string>
 
 
-
     <string name="uhf_msg_set_protocol_succ">Set the protocol success</string>
     <string name="uhf_msg_set_protocol_fail">Set the protocol failure</string>
 

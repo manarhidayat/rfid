@@ -375,30 +375,24 @@ public class UHFNewReadTagFragment extends Fragment implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.btClear:
-                clearData();
-                break;
-            case R.id.InventoryLoop:
-                startThread();
-                break;
-            case R.id.btInventory:
-                inventory();
-                break;
-            case R.id.btStop:
-                if (mContext.uhf.getConnectStatus() == ConnectionStatus.CONNECTED) {
-                    stopInventory();
-                }
-                break;
-            case R.id.rbEPC:
-                executorService.execute(epcModeRunnable);
-                break;
-            case R.id.rbEPC_TID:
-                executorService.execute(epcTidModeRunnable);
-                break;
-            case R.id.rbEPC_TID_USER:
-                alertSet();
-                break;
+        int id = view.getId();
+
+        if(id == R.id.btClear) {
+            clearData();
+        } else if(id == R.id.InventoryLoop) {
+            startThread();
+        } else if(id == R.id.btInventory) {
+            inventory();
+        } else if(id == R.id.btStop) {
+            if (mContext.uhf.getConnectStatus() == ConnectionStatus.CONNECTED) {
+                stopInventory();
+            }
+        } else if(id == R.id.rbEPC) {
+            executorService.execute(epcModeRunnable);
+        } else if(id == R.id.rbEPC_TID) {
+            executorService.execute(epcTidModeRunnable);
+        } else if(id == R.id.rbEPC_TID_USER) {
+            alertSet();
         }
     }
 

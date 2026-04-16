@@ -152,24 +152,20 @@ public class UHFReadTagFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.btClear:
-                clearData();
-                break;
-            case R.id.btInventoryPerMinute:
-                inventoryPerMinute();
-                break;
-            case R.id.InventoryLoop:
-                startThread();
-                break;
-            case R.id.btInventory:
-                inventory();
-                break;
-            case R.id.btStop:
-                if (mContext.uhf.getConnectStatus() == ConnectionStatus.CONNECTED) {
-                    stopInventory();
-                }
-                break;
+        int id = view.getId();
+
+        if(id == R.id.btClear) {
+            clearData();
+        } else if(id == R.id.btInventoryPerMinute) {
+            inventoryPerMinute();
+        } else if(id == R.id.InventoryLoop) {
+            startThread();
+        } else if(id == R.id.btInventory) {
+            inventory();
+        } else if(id == R.id.btStop) {
+            if (mContext.uhf.getConnectStatus() == ConnectionStatus.CONNECTED) {
+                stopInventory();
+            }
         }
     }
 

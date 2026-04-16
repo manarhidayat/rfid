@@ -74,19 +74,15 @@ public class UHFKillFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.rbEPC_filter_kill:
-                etPtr_filter_kill.setText("32");
-                break;
-            case R.id.rbTID_filter_kill:
-                etPtr_filter_kill.setText("0");
-                break;
-            case R.id.rbUser_filter_kill:
-                etPtr_filter_kill.setText("0");
-                break;
-            case R.id.btnKill:
-                kill();
-                break;
+        int id = view.getId();
+        if (id == R.id.rbEPC_filter_kill) {
+            etPtr_filter_kill.setText("32");
+        } else if (id == R.id.rbTID_filter_kill) {
+            etPtr_filter_kill.setText("0");
+        } else if (id == R.id.rbUser_filter_kill) {
+            etPtr_filter_kill.setText("0");
+        } else if (id == R.id.btnKill) {
+            kill();
         }
     }
 

@@ -36,6 +36,7 @@ import com.example.uhf_bt.fragment.UHFReadTagFragment;
 import com.example.uhf_bt.fragment.UHFSetFragment;
 import com.example.uhf_bt.fragment.UHFUpdataFragment;
 import com.example.uhf_bt.fragment.UHFWriteFragment;
+import com.example.uhf_bt.opname.OpnameDataActivity;
 import com.rscja.deviceapi.RFIDWithUHFBLE;
 import com.rscja.deviceapi.interfaces.ConnectionStatus;
 import com.rscja.deviceapi.interfaces.ConnectionStatusCallback;
@@ -48,6 +49,8 @@ import java.util.TimerTask;
 
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTabHost;
+
+import no.nordicsemi.android.dfu.BuildConfig;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
 
@@ -113,6 +116,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         checkLocationEnable();
         uhf.init(getApplicationContext());
         Utils.initSound(getApplicationContext());
+
+        Button btnOpnameData = findViewById(R.id.btn_opname_data);
+        btnOpnameData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, OpnameDataActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -127,27 +139,27 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.btn_connect:
-                if (isScanning) {
-                    showToast(R.string.title_stop_read_card);
-                } else if (uhf.getConnectStatus() == ConnectionStatus.CONNECTING) {
-                    showToast(R.string.connecting);
-                } else if (uhf.getConnectStatus() == ConnectionStatus.CONNECTED) {
-                    disconnect(true);
-                } else {
-                    showBluetoothDevice(true);
-                }
-                break;
-            case R.id.btn_search:
-                if (isScanning) {
-                    showToast(R.string.title_stop_read_card);
-                } else if (uhf.getConnectStatus() == ConnectionStatus.CONNECTING) {
-                    showToast(R.string.connecting);
-                } else {
-                    showBluetoothDevice(false);
-                }
-                break;
+
+        int id = view.getId();
+
+        if(id == R.id.btn_connect) {
+            if (isScanning) {
+                showToast(R.string.title_stop_read_card);
+            } else if (uhf.getConnectStatus() == ConnectionStatus.CONNECTING) {
+                showToast(R.string.connecting);
+            } else if (uhf.getConnectStatus() == ConnectionStatus.CONNECTED) {
+                disconnect(true);
+            } else {
+                showBluetoothDevice(true);
+            }
+        } else if (id == R.id.btn_search) {
+            if (isScanning) {
+                showToast(R.string.title_stop_read_card);
+            } else if (uhf.getConnectStatus() == ConnectionStatus.CONNECTING) {
+                showToast(R.string.connecting);
+            } else {
+                showBluetoothDevice(false);
+            }
         }
     }
 

@@ -214,58 +214,46 @@ public class UHFSetFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.btnGetPower:
-                getPower(true);
-                break;
-            case R.id.btnSetPower:
-                setPower();
-                break;
-            case R.id.BtGetFre:
-                getFre(true);
-                break;
-            case R.id.BtSetFre:
-                setFre();
-                break;
-            case R.id.btnSetFreHop:
-                setFre2();
-                break;
-            case R.id.rbUsHop:
-                OnClick_rbUsHop();
-                break;
-            case R.id.rbBRA:
-                OnClick_rbBRA();
-                break;
-            case R.id.rbOtherHop:
-                OnClick_rbOtherHop();
-                break;
-            case R.id.btnSetProtocol:
-                setProtocol();
-                break;
-            case R.id.btnGetProtocol:
-                getProtocol(true);
-                break;
-            case R.id.btnbeepClose:
-                if (context.uhf.setBeep(false)) {
-                    context.showToast(R.string.setting_succ);
-                } else {
-                    context.showToast(R.string.setting_fail);
-                }
-                break;
-            case R.id.btnbeepOpen:
-                if (context.uhf.setBeep(true)) {
-                    context.showToast(R.string.setting_succ);
-                } else {
-                    context.showToast(R.string.setting_fail);
-                }
-                break;
-            case R.id.cbTagFocus:
-                if (context.uhf.setTagFocus(cbTagFocus.isChecked())) {
-                    context.showToast(R.string.setting_succ);
-                } else {
-                    context.showToast(R.string.setting_fail);
-                }
-                break;
+        int id = view.getId();
+
+        if(id == R.id.btnGetPower) {
+            getPower(true);
+        } else if(id == R.id.btnSetPower) {
+            setPower();
+        } else if(id == R.id.BtGetFre) {
+            getFre(true);
+        } else if(id == R.id.BtSetFre) {
+            setFre();
+        } else if(id == R.id.btnSetFreHop) {
+            setFre2();
+        } else if(id == R.id.rbUsHop) {
+            OnClick_rbUsHop();
+        } else if(id == R.id.rbBRA) {
+            OnClick_rbBRA();
+        } else if(id == R.id.rbOtherHop) {
+            OnClick_rbOtherHop();
+        } else if(id == R.id.btnSetProtocol) {
+            setProtocol();
+        } else if(id == R.id.btnGetProtocol) {
+            getProtocol(true);
+        } else if(id == R.id.btnbeepClose) {
+            if (context.uhf.setBeep(false)) {
+                context.showToast(R.string.setting_succ);
+            } else {
+                context.showToast(R.string.setting_fail);
+            }
+        } else if(id == R.id.btnbeepOpen) {
+            if (context.uhf.setBeep(true)) {
+                context.showToast(R.string.setting_succ);
+            } else {
+                context.showToast(R.string.setting_fail);
+            }
+        } else if(id == R.id.cbTagFocus) {
+            if (context.uhf.setTagFocus(cbTagFocus.isChecked())) {
+                context.showToast(R.string.setting_succ);
+            } else {
+                context.showToast(R.string.setting_fail);
+            }
         }
     }
 
