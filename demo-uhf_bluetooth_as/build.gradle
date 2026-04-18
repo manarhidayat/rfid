@@ -88,6 +88,14 @@ buildscript {
 
 }
 
+configurations.all {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        if (details.requested.group == 'org.jetbrains.kotlin') {
+            details.useVersion "2.1.0"
+        }
+    }
+}
+
 allprojects {
     repositories {
         mavenCentral()
@@ -116,5 +124,11 @@ dependencies {
     implementation 'androidx.activity:activity:1.13.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
     implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.1.0'
+
+    implementation 'com.itextpdf:itext7-core:7.1.15'
+
+    // Excel Library
+    implementation 'org.apache.poi:poi:5.2.3'
+    implementation 'org.apache.poi:poi-ooxml:5.2.3'
 
 }

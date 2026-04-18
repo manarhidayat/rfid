@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:padding="8dp">
+
+    <TextView
+        android:id="@+id/tv_no"
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"
+        android:text="1" />
+
+    <TextView
+        android:id="@+id/tv_location_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Nama Lokasi"
+        android:textColor="@android:color/black"/>
+
+    <Button
+        android:id="@+id/btn_status"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="80dp"
+        android:layout_height="35dp"
+        android:background="#E0E0E0"
+        android:text="Open"
+        android:textAllCaps="false"
+        android:textSize="12sp" />
+
+    <Button
+        android:id="@+id/btn_action"
+        android:layout_width="80dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="4dp"
+        android:text="Action"
+        android:textAllCaps="false"
+        android:textSize="12sp" />
+
+</LinearLayout>

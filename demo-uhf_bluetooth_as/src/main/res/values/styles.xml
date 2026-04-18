@@ -9,7 +9,7 @@
 
 <!--        &lt;!&ndash; TAMBAHKAN DUA BARIS INI &ndash;&gt;-->
 <!--        <item name="android:fitsSystemWindows">true</item>-->
-        <item name="android:windowTranslucentStatus">false</item>
+<!--        <item name="android:windowTranslucentStatus">false</item>-->
 
     </style>
 

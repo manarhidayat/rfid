@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Header Info -->
+    <TextView
+        android:id="@+id/tv_opname_code"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Code: -"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"/>
+
+    <TextView
+        android:id="@+id/tv_opname_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Date: -"
+        android:textSize="14sp" />
+
+    <!-- Search Bar -->
+    <EditText
+        android:id="@+id/et_search_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:hint="Cari Lokasi..."
+        android:background="@android:drawable/editbox_background"
+        android:padding="10dp"
+        android:drawableStart="@android:drawable/ic_menu_search"
+        android:drawablePadding="8dp"
+        android:inputType="text"/>
+
+    <!-- Table Header (Optional but Recommended) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp"
+        android:padding="8dp"
+        android:background="#EEEEEE">
+        <TextView android:layout_width="30dp" android:layout_height="wrap_content" android:text="No" android:textStyle="bold"/>
+        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Location" android:textStyle="bold"/>
+        <TextView android:layout_width="80dp" android:layout_height="wrap_content" android:text="Status" android:textStyle="bold" android:gravity="center"/>
+        <TextView android:layout_width="80dp" android:layout_height="wrap_content" android:text="Action" android:textStyle="bold" android:gravity="center"/>
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_opname_location"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="4dp"/>
+
+</LinearLayout>

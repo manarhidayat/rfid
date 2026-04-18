@@ -37,6 +37,7 @@ import com.example.uhf_bt.fragment.UHFSetFragment;
 import com.example.uhf_bt.fragment.UHFUpdataFragment;
 import com.example.uhf_bt.fragment.UHFWriteFragment;
 import com.example.uhf_bt.opname.OpnameDataActivity;
+import com.example.uhf_bt.opname.OpnameReportActivity;
 import com.rscja.deviceapi.RFIDWithUHFBLE;
 import com.rscja.deviceapi.interfaces.ConnectionStatus;
 import com.rscja.deviceapi.interfaces.ConnectionStatusCallback;
@@ -122,6 +123,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, OpnameDataActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        Button btnOpnameReport = findViewById(R.id.btn_opname_report);
+        btnOpnameReport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, OpnameReportActivity.class);
                 startActivity(intent);
             }
         });

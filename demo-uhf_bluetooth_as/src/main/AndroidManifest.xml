@@ -21,7 +21,19 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup,android:theme">
-    <activity
+        <activity
+            android:name=".opname.OpnameReportActivity"
+            android:exported="false" />
+        <activity
+            android:name=".opname.OpnameListLocationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".opname.OpnameLocationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".opname.OpnameAddActivity"
+            android:exported="false" />
+        <activity
             android:name=".opname.OpnameDataActivity"
             android:exported="false" />
         <activity
