@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical"
+    android:orientation="vertical"
+    android:padding="8dp" >
+
+    <!-- EPC Data Row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/TvTagUii"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:paddingTop="3dp"
+            android:paddingBottom="2dp"
+            android:textStyle="bold"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/TvTagLen"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" 
+            android:visibility="gone" />
+
+        <TextView
+            android:visibility="gone"
+            android:text="ss"
+            android:id="@+id/TvTagCount"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:paddingTop="3dp"
+            android:paddingBottom="2dp" />
+        
+        <TextView
+            android:visibility="gone"
+            android:id="@+id/TvTagRssi"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingTop="3dp"
+            android:paddingBottom="2dp" />
+
+        <Button
+            android:id="@+id/btnCopyEPC"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="📋"
+            android:textSize="16sp"
+            android:padding="8dp"
+            android:layout_marginLeft="4dp"
+            android:background="@android:color/holo_green_light"
+            android:textColor="@android:color/white"
+            android:minWidth="40dp"
+            android:minHeight="40dp" />
+
+        <Button
+            android:id="@+id/btnOpenWebView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Assignment"
+            android:textSize="12sp"
+            android:padding="8dp"
+            android:layout_marginLeft="4dp"
+            android:background="@android:color/holo_blue_light"
+            android:textColor="@android:color/white" />
+
+    </LinearLayout>
+
+    <!-- Master Data Section -->
+    <LinearLayout
+        android:id="@+id/layoutMasterData"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="8dp"
+        android:padding="8dp"
+        android:background="@android:color/background_light"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tvEnDesc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="@android:color/black"
+            android:layout_marginBottom="2dp" />
+
+        <TextView
+            android:id="@+id/tvBranchName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="@android:color/black"
+            android:layout_marginBottom="2dp" />
+
+        <TextView
+            android:id="@+id/tvPtDesc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="@android:color/black"
+            android:layout_marginBottom="2dp" />
+
+        <TextView
+            android:id="@+id/tvAssDesc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="@android:color/black"
+            android:layout_marginBottom="2dp" />
+
+        <TextView
+            android:id="@+id/tvAssCode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="@android:color/black"
+            android:layout_marginBottom="2dp" />
+
+        <TextView
+            android:id="@+id/tvAssServiceDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="@android:color/black"
+            android:layout_marginBottom="2dp" />
+
+        <TextView
+            android:id="@+id/tvAssRefPo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="@android:color/black"
+            android:layout_marginBottom="2dp" />
+
+        <TextView
+            android:id="@+id/tvAssRefRcpt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="@android:color/black" />
+
+    </LinearLayout>
+
+</LinearLayout>

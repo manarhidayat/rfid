@@ -1,66 +1,100 @@
 package com.example.uhf_bt.opname
 
+import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.uhf_bt.R
-import com.example.uhf_bt.model.Opname
+import com.example.uhf_bt.opnameimport.OpnameViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import java.util.*
 
+@AndroidEntryPoint // WAJIB untuk Hilt
 class OpnameDataActivity : AppCompatActivity() {
-    private var recyclerView: RecyclerView? = null
-    private var btnAddNew: Button? = null
-    private var etStartDate: EditText? = null
-    private var etToDate: EditText? = null
-    private var etSearch: EditText? = null
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var btnAddNew: Button
+    private lateinit var btnSearch: Button
+    private lateinit var etStartDate: EditText
+    private lateinit var etToDate: EditText
+    private lateinit var etSearch: EditText
 
-    private var adapter: OpnameAdapter? = null
+    // Injeksi ViewModel menggunakan Activity KTX
+    private val viewModel: OpnameViewModel by viewModels()
+    private val calendar = Calendar.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_opname_data)
 
+        // Inisialisasi View
         recyclerView = findViewById(R.id.rv_opname_data)
         btnAddNew = findViewById(R.id.btn_add_new)
+        btnSearch = findViewById(R.id.btn_search)
         etStartDate = findViewById(R.id.et_start_date)
         etToDate = findViewById(R.id.et_to_date)
         etSearch = findViewById(R.id.et_search)
 
-        recyclerView!!.setLayoutManager(LinearLayoutManager(this))
+        recyclerView.layoutManager = LinearLayoutManager(this)
 
-        // 3. Setup RecyclerView & Data Dummy
-        setupRecyclerView()
+        setupDatePicker(etStartDate)
+        setupDatePicker(etToDate)
 
-        btnAddNew!!.setOnClickListener(View.OnClickListener { view: View? ->
-            val intent = Intent(this@OpnameDataActivity, OpnameAddActivity::class.java)
-            startActivity(intent)
-        })
-    }
+        // Observe Data dari ViewModel
+        observeViewModel()
 
-    private fun setupRecyclerView() {
-        recyclerView!!.setLayoutManager(LinearLayoutManager(this))
+        // Load Data Pertama Kali (Tanpa Filter)
+        viewModel.getOpnameData()
 
-        // Membuat data dummy
-        val dummyList: MutableList<Opname> = ArrayList()
-        dummyList.add(Opname("1", "OPN-20231001-001", "2023-10-01"))
-        dummyList.add(Opname("2", "OPN-20231002-005", "2023-10-02"))
-        dummyList.add(Opname("3", "OPN-20231005-012", "2023-10-05"))
+        // Tombol Search dengan Filter
+        btnSearch.setOnClickListener {
+            val code = etSearch.text.toString().trim()
+            val start = etStartDate.text.toString().trim()
+            val end = etToDate.text.toString().trim()
 
-        // Pasang ke adapter (Ganti OpnameAdapter dengan nama class adapter Anda)
-        // Inisialisasi adapter dengan listener
-        val adapter = OpnameAdapter(dummyList) { opname ->
-            // Logika ketika item diklik
-            val intent = Intent(this, OpnameLocationActivity::class.java)
+            viewModel.getOpnameData(
+                code = if (code.isEmpty()) null else code,
+                startDate = if (start.isEmpty()) null else start,
+                endDate = if (end.isEmpty()) null else end
+            )
+        }
 
-            // Membawa data objek Opname
-            intent.putExtra("EXTRA_OPNAME", opname)
-
+        btnAddNew.setOnClickListener {
+            val intent = Intent(this, OpnameAddActivity::class.java)
             startActivity(intent)
         }
-        recyclerView!!.setAdapter(adapter)
+    }
+
+    private fun observeViewModel() {
+        viewModel.opnameList.observe(this) { list ->
+            val adapter = OpnameAdapter(list.toMutableList()) { opname ->
+                val intent = Intent(this, OpnameLocationActivity::class.java)
+                intent.putExtra("EXTRA_OPNAME", opname)
+                startActivity(intent)
+            }
+            recyclerView.adapter = adapter
+        }
+
+        viewModel.errorMessage.observe(this) { msg ->
+            if (msg.isNotEmpty()) Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+        }
+
+        viewModel.isLoading.observe(this) { isLoading ->
+            // Tampilkan progress bar jika ada
+        }
+    }
+
+    private fun setupDatePicker(editText: EditText) {
+        editText.setOnClickListener {
+            DatePickerDialog(this, { _, year, month, day ->
+                val date = String.format("%04d-%02d-%02d", year, month + 1, day)
+                editText.setText(date)
+            }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show()
+        }
     }
 }

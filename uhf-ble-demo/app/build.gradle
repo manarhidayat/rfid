@@ -1,0 +1,152 @@
+apply plugin: 'com.android.application'
+apply plugin: 'org.jetbrains.kotlin.android' // Tambahkan ini
+apply plugin: 'com.google.dagger.hilt.android' // Tambahkan ini
+apply plugin: 'com.google.devtools.ksp' // Tambahkan ini untuk ksp
+
+android {
+    namespace "com.example.uhf_bt" // Add this line
+    compileSdkVersion 35
+    buildToolsVersion '35.0.0'
+    ndkVersion '21.3.6528147'
+    defaultConfig {
+        applicationId "com.example.uhf_bt"
+        minSdkVersion 26
+        targetSdkVersion 35
+        versionCode 1
+        versionName "1.0.0"
+        //1.8增加R2数据提取和导出
+        //1.8.1修改Session设置获取BUG
+        //1.8.2 更改API（修改盘点标签bug）
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        multiDexEnabled true
+    }
+
+    signingConfigs {
+        debug {
+            File strFile = new File("/uhf-ble_release.jks")
+            storeFile file(strFile)
+            storePassword "123456"
+            keyPassword "123456"
+            keyAlias "key0"
+        }
+        release {
+            File strFile = new File("/uhf-ble_release.jks")
+            storeFile file(strFile)
+            storePassword "123456"
+            keyPassword "123456"
+            keyAlias "key0"
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        // 自定义apk名称
+        android.applicationVariants.all { variant ->
+            variant.outputs.all {
+                outputFileName = "UHF-ble_v${defaultConfig.versionName}.apk"
+            }
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors  in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar','*.aar'], dir: 'libs')
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    // Core KTX untuk mempermudah penulisan kode Kotlin di Android
+    implementation 'androidx.core:core-ktx:1.12.0'
+
+//    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+//    implementation 'androidx.appcompat:appcompat:1.1.0-alpha05'
+//    implementation 'androidx.cardview:cardview:1.0.0'
+//    // 蓝牙固件升级
+//    implementation('no.nordicsemi.android:dfu:1.9.0') {
+//        exclude group: 'com.android.support'
+//    }
+//    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+//
+////     Retrofit untuk API calls
+//    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+//    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+//    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.0'
+    implementation 'com.google.code.gson:gson:2.8.6'
+
+    implementation 'androidx.appcompat:appcompat:1.7.1'
+    implementation 'androidx.cardview:cardview:1.0.0'
+//    implementation files('libs/cw-deviceapiver20191022.jar')
+    // 蓝牙固件升级
+    implementation('no.nordicsemi.android:dfu:1.9.0') {
+        exclude group: 'com.android.support'
+    }
+    implementation 'com.google.android.material:material:1.12.0'
+    implementation 'androidx.activity:activity:1.9.3' // Gunakan 1.9.3 yang lebih stabil
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
+    implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.1.0'
+
+    // Add this line in your dependencies block
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.5'
+
+    // Your existing POI dependencies
+    implementation 'org.apache.poi:poi:5.2.3'
+    implementation 'org.apache.poi:poi-ooxml:5.2.3'
+
+    // Add these exclusions if the error persists after enabling desugaring
+    implementation('org.apache.poi:poi-ooxml:5.2.3') {
+        exclude group: 'org.apache.logging.log4j', module: 'log4j-api'
+    }
+
+    implementation 'com.itextpdf:itext7-core:7.1.15'
+
+    // Versi Variabel
+    def coroutine_version = "1.7.3"
+    def lifecycle = "2.7.0"
+    def retrofit_version = "2.9.0"
+    def okhttp_version = "4.9.1"
+
+    // Coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutine_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutine_version"
+
+    // Lifecycle
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle"
+    implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle"
+
+    // Retrofit & Networking
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-scalars:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+    implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
+
+    // Hilt
+    implementation "com.google.dagger:hilt-android:2.55"        // Replace kapt with ksp
+    ksp "com.google.dagger:hilt-compiler:2.55"
+
+    // Activity KTX
+    implementation "androidx.activity:activity-ktx:1.9.3"
+}

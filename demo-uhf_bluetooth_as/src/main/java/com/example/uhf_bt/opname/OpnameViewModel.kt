@@ -1,0 +1,161 @@
+package com.example.uhf_bt.opnameimport
+
+import androidx.lifecycle.LiveData
+import com.example.uhf_bt.opname.OpnameRepository
+
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.uhf_bt.model.AssetOpname
+import com.example.uhf_bt.model.Opname
+import com.example.uhf_bt.model.OpnameLocation
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+
+@HiltViewModel
+class OpnameViewModel @Inject constructor(
+    private val repository: OpnameRepository
+) : ViewModel() {
+
+    // Opname Data
+    private val _opnameList = MutableLiveData<List<Opname>>()
+    val opnameList: LiveData<List<Opname>> = _opnameList
+
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> = _isLoading
+
+    private val _errorMessage = MutableLiveData<String>()
+    val errorMessage: LiveData<String> = _errorMessage
+
+    // Opname Add
+    private val _isSuccess = MutableLiveData<Boolean>()
+    val isSuccess: LiveData<Boolean> = _isSuccess
+
+    // LiveData tambahan
+    private val _locationList = MutableLiveData<List<OpnameLocation>>()
+    val locationList: LiveData<List<OpnameLocation>> = _locationList
+
+    private val _assetList = MutableLiveData<List<AssetOpname>>()
+    val assetList: LiveData<List<AssetOpname>> = _assetList
+
+    private val _foreignAsset = MutableLiveData<AssetOpname>()
+    val foreignAsset: LiveData<AssetOpname> = _foreignAsset
+
+    fun getOpnameData(code: String? = null, startDate: String? = null, endDate: String? = null) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                val response = repository.fetchOpnameList(code, startDate, endDate)
+                if (response.isSuccessful) {
+                    _opnameList.value = response.body() ?: emptyList()
+                } else {
+                    _errorMessage.value = "Error: ${response.message()}"
+                }
+            } catch (e: Exception) {
+                _errorMessage.value = e.localizedMessage ?: "Unknown Error"
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+
+    fun addOpname(code: String, date: String) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                // Buat object Opname (id dikosongkan jika auto-increment dari server)
+                val newOpname = Opname(id = "", code = code, date = date)
+                val response = repository.addOpname(newOpname)
+
+                if (response.isSuccessful) {
+                    _isSuccess.value = true
+                } else {
+                    _errorMessage.value = "Gagal menyimpan data"
+                }
+            } catch (e: Exception) {
+                _errorMessage.value = e.localizedMessage
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+
+    // Fungsi fetch untuk masing-masing activity
+    fun getOpnameLocation(code: String, search: String? = null) {
+        viewModelScope.launch {
+            val response = repository.fetchOpnameLocation(code, search)
+            if (response.isSuccessful) _locationList.value = response.body() ?: emptyList()
+        }
+    }
+
+    fun getOpnameListLocation(opnameNo: Int, search: String? = null) {
+        viewModelScope.launch {
+            val response = repository.fetchOpnameListLocation(opnameNo, search)
+            if (response.isSuccessful) _assetList.value = response.body() ?: emptyList()
+        }
+    }
+
+    fun getOpnameReport(start: String?, end: String?, code: String?) {
+        viewModelScope.launch {
+            val response = repository.fetchOpnameReport(start, end, code)
+            if (response.isSuccessful) _opnameList.value = response.body() ?: emptyList()
+        }
+    }
+
+    fun updateOpnameLocation(opnameCode: String, locationId: Int, newStatus: String) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                // Panggil repository untuk update status ke API
+                val response = repository.updateOpnameLocationStatus(opnameCode, locationId, newStatus)
+                if (response.isSuccessful) {
+                    // Refresh data setelah berhasil update
+                    getOpnameLocation(opnameCode)
+                } else {
+                    _errorMessage.value = "Gagal memperbarui status"
+                }
+            } catch (e: Exception) {
+                _errorMessage.value = e.localizedMessage
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+
+    fun submitOpnameListLocation(assets: List<AssetOpname>) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                val response = repository.submitOpnameListLocation(assets)
+                if (response.isSuccessful) {
+                    _isSuccess.value = true
+                } else {
+                    _errorMessage.value = "Failed to submit data"
+                }
+            } catch (e: Exception) {
+                _errorMessage.value = e.localizedMessage
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+
+    fun getForeignOpname(assetCode: String) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                val response = repository.fetchForeignOpname(assetCode)
+                if (response.isSuccessful && response.body() != null) {
+                    _foreignAsset.value = response.body()
+                } else {
+                    _errorMessage.value = "Asset tidak ditemukan"
+                }
+            } catch (e: Exception) {
+                _errorMessage.value = e.localizedMessage
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+}

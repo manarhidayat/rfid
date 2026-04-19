@@ -7,13 +7,16 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.uhf_bt.R
 import com.example.uhf_bt.model.Opname
+import com.example.uhf_bt.opnameimport.OpnameViewModel
 import com.itextpdf.kernel.pdf.PdfDocument
 import com.itextpdf.kernel.pdf.PdfWriter
 import com.itextpdf.layout.Document
@@ -38,6 +41,8 @@ class OpnameReportActivity : AppCompatActivity() {
 
     // Simpan data list secara global agar bisa diakses fungsi export
     private var reportList: List<Opname> = listOf()
+
+    private val viewModel: OpnameViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,6 +76,23 @@ class OpnameReportActivity : AppCompatActivity() {
             } else {
                 Toast.makeText(this, "No data to export", Toast.LENGTH_SHORT).show()
             }
+        }
+
+        findViewById<Button>(R.id.btn_search_report).setOnClickListener {
+            val code = findViewById<EditText>(R.id.et_search_report).text.toString()
+            val start = etStartDate.text.toString()
+            val end = etToDate.text.toString()
+
+            viewModel.getOpnameReport(
+                if(start.isEmpty()) null else start,
+                if(end.isEmpty()) null else end,
+                if(code.isEmpty()) null else code
+            )
+        }
+
+        viewModel.opnameList.observe(this) { list ->
+            reportList = list
+            setupRecyclerView() // Refresh adapter dengan data baru
         }
     }
 

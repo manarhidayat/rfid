@@ -37,6 +37,13 @@
         android:drawablePadding="8dp"
         android:inputType="text"/>
 
+    <Button
+        android:id="@+id/btn_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:text="Search" />
+
     <!-- Table Header (Optional but Recommended) -->
     <LinearLayout
         android:layout_width="match_parent"

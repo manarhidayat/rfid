@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_margin="16dp"
+    android:background="@android:color/white"
+    android:fitsSystemWindows="true">
+
+    <!-- Tombol Add New -->
+    <Button
+        android:id="@+id/btn_add_new"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add New Opname"
+        android:layout_marginBottom="16dp"
+        android:minHeight="56dp"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:paddingVertical="12dp" />
+
+    <!-- Filter Tanggal -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="12dp">
+
+        <!-- Menggunakan AppCompatEditText agar padding & background berfungsi -->
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/et_start_date"
+            android:layout_width="0dp"
+            android:layout_height="52dp"
+            android:layout_weight="1"
+            android:hint="Start Date"
+            android:focusable="false"
+            android:clickable="true"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="12dp"
+            android:background="@android:drawable/edit_text"
+            android:textSize="14sp" />
+
+        <View android:layout_width="8dp" android:layout_height="0dp"/>
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/et_to_date"
+            android:layout_width="0dp"
+            android:layout_height="52dp"
+            android:layout_weight="1"
+            android:hint="To Date"
+            android:focusable="false"
+            android:clickable="true"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="12dp"
+            android:background="@android:drawable/edit_text"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <!-- Kolom Search -->
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/et_search"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:hint="Search Code..."
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="12dp"
+        android:background="@android:drawable/edit_text"
+        android:textSize="14sp" />
+
+    <Button
+        android:id="@+id/btn_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:text="Search" />
+
+    <!-- List Header dengan Padding Internal yang Dipaksa -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#EEEEEE"
+        android:padding="12dp"
+        android:minHeight="48dp"
+        android:gravity="center_vertical">
+        <TextView android:layout_width="35dp" android:layout_height="wrap_content" android:text="No" android:textStyle="bold" android:textSize="13sp" android:textColor="@android:color/black"/>
+        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Code" android:textStyle="bold" android:textSize="13sp" android:textColor="@android:color/black"/>
+        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Date" android:textStyle="bold" android:textSize="13sp" android:textColor="@android:color/black"/>
+        <TextView android:layout_width="70dp" android:layout_height="wrap_content" android:text="Action" android:textStyle="bold" android:gravity="center" android:textSize="13sp" android:textColor="@android:color/black"/>
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_opname_data"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:paddingTop="8dp"/>
+
+</LinearLayout>

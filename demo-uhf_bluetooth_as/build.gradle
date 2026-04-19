@@ -1,5 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'org.jetbrains.kotlin.android'
+apply plugin: 'com.google.dagger.hilt.android' // Tambahkan ini
+apply plugin: 'com.google.devtools.ksp' // Tambahkan ini untuk ksp
 
 android {
     namespace "com.example.uhf_bt" // Add this line
@@ -8,17 +10,20 @@ android {
 
     defaultConfig {
         applicationId "com.example.uhf_bt"
-        minSdkVersion 23
+        minSdkVersion 26
         targetSdkVersion 36
         versionCode 1
         versionName "1.0.0"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
+        multiDexEnabled true
     }
 
     // 1. Set Java compilation compatibility
     compileOptions {
+        coreLibraryDesugaringEnabled true
+
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
@@ -81,6 +86,8 @@ buildscript {
         classpath 'com.android.tools.build:gradle:8.9.1'
         classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:2.1.0'
 
+        classpath "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:2.1.0-1.0.29"
+        classpath 'com.google.dagger:hilt-android-gradle-plugin:2.51.1'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -125,10 +132,48 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
     implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.1.0'
 
-    implementation 'com.itextpdf:itext7-core:7.1.15'
+    // Add this line in your dependencies block
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.5'
 
-    // Excel Library
+    // Your existing POI dependencies
     implementation 'org.apache.poi:poi:5.2.3'
     implementation 'org.apache.poi:poi-ooxml:5.2.3'
+
+    // Add these exclusions if the error persists after enabling desugaring
+    implementation('org.apache.poi:poi-ooxml:5.2.3') {
+        exclude group: 'org.apache.logging.log4j', module: 'log4j-api'
+    }
+
+    implementation 'com.itextpdf:itext7-core:7.1.15'
+
+    // Versi Variabel
+    def coroutine_version = "1.7.3"
+    def lifecycle = "2.7.0"
+    def retrofit_version = "2.9.0"
+    def okhttp_version = "4.9.1"
+    def hilt_version = "2.51.1"
+
+    // Coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutine_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutine_version"
+
+    // Lifecycle
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle"
+    implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle"
+
+    // Retrofit & Networking
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-scalars:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+    implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
+
+    // Hilt
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    ksp "com.google.dagger:hilt-android-compiler:$hilt_version"
+
+    // Activity KTX
+    implementation "androidx.activity:activity-ktx:1.8.2"
 
 }
