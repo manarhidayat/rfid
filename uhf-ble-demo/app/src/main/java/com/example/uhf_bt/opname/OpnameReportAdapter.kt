@@ -31,8 +31,8 @@ class OpnameReportAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = list[position]
         holder.tvNo.text = (position + 1).toString()
-        holder.tvCode.text = item.code
-        holder.tvDate.text = item.date
+        holder.tvCode.text = item.assroCode
+        holder.tvDate.text = item.assroStartDate
 
         holder.btnPdf.setOnClickListener { onPdfClick(item) }
         holder.btnExcel.setOnClickListener { onExcelClick(item) }

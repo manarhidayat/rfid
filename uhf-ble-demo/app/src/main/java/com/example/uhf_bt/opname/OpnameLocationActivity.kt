@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
@@ -28,6 +29,7 @@ class OpnameLocationActivity : AppCompatActivity() {
     private lateinit var etSearch: EditText
     private lateinit var rvLocation: RecyclerView
     private lateinit var btnSearch: Button
+    private lateinit var btnSave: Button
     private lateinit var adapter: OpnameLocationAdapter
     private var locationList = mutableListOf<OpnameLocation>()
 
@@ -43,21 +45,21 @@ class OpnameLocationActivity : AppCompatActivity() {
         etSearch = findViewById(R.id.et_search_location)
         rvLocation = findViewById(R.id.rv_opname_location)
         btnSearch = findViewById(R.id.btn_search)
+        btnSave = findViewById(R.id.btn_submit)
 
-        prepareDummyData()
 
         val opnameData = intent.getSerializableExtra("EXTRA_OPNAME") as? Opname
         opnameData?.let {
-            tvOpnameCode.text = "Code: ${it.code}"
-            tvOpnameDate.text = "Date: ${it.date}"
+            tvOpnameCode.text = "Code: ${it.assroCode}"
+            tvOpnameDate.text = "Date: ${it.assroStartDate}"
 
             // Panggil API Pertama Kali
-//            viewModel.getOpnameLocation(it.code.toString())
+            viewModel.getOpnameLocation(it.assroOid.toString())
         }
 
         btnSearch.setOnClickListener {
             val query = etSearch.text.toString().trim()
-            opnameData?.let { data -> viewModel.getOpnameLocation(data.code.toString(), query) }
+            opnameData?.let { data -> viewModel.getOpnameLocation(data.assroOid.toString(), query) }
         }
 
         // 4. Setup RecyclerView
@@ -81,6 +83,15 @@ class OpnameLocationActivity : AppCompatActivity() {
         )
         rvLocation.layoutManager = LinearLayoutManager(this)
         rvLocation.adapter = adapter
+
+        btnSave.setOnClickListener {
+            if (locationList.isNotEmpty()) {
+                // Tampilkan loading jika perlu
+                viewModel.saveLocations(locationList)
+            }
+        }
+
+        observe()
     }
 
     private fun observe() {
@@ -90,13 +101,16 @@ class OpnameLocationActivity : AppCompatActivity() {
             locationList.addAll(list)
             adapter.notifyDataSetChanged()
         }
-    }
 
-    private fun prepareDummyData() {
-        locationList.add(OpnameLocation(1, "Gudang A - Rak 01", "Open"))
-        locationList.add(OpnameLocation(2, "Gudang A - Rak 02", "Done"))
-        locationList.add(OpnameLocation(3, "Gudang B - Sektor Utama", "Open"))
-        locationList.add(OpnameLocation(4, "Gudang C", "Open"))
+        viewModel.updateStatus.observe(this) { isSuccess ->
+            if (isSuccess) {
+                Toast.makeText(this, "Data berhasil disimpan", Toast.LENGTH_SHORT).show()
+                // Opsi: Refresh data dari server lagi
+                // opnameData?.let { viewModel.getOpnameLocation(it.assroOid.toString()) }
+            } else {
+                Toast.makeText(this, "Gagal menyimpan data", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun showStatusDialog(position: Int) {
@@ -107,21 +121,21 @@ class OpnameLocationActivity : AppCompatActivity() {
             val selectedStatus = options[dispensed]
             val locationItem = locationList[position]
 
-            // Ambil data opname dari intent untuk mendapatkan kodenya
-            val opnameData = intent.getSerializableExtra("EXTRA_OPNAME") as? Opname
-
-            opnameData?.let {
-                // Panggil API melalui ViewModel
-                // Parameter: Kode Opname, ID/No Lokasi, dan Status Baru
-                viewModel.updateOpnameLocation(
-                    it.code.toString(),
-                    locationItem.no,
-                    selectedStatus
-                )
-            }
+//            // Ambil data opname dari intent untuk mendapatkan kodenya
+//            val opnameData = intent.getSerializableExtra("EXTRA_OPNAME") as? Opname
+//
+//            opnameData?.let {
+//                // Panggil API melalui ViewModel
+//                // Parameter: Kode Opname, ID/No Lokasi, dan Status Baru
+//                viewModel.updateOpnameLocation(
+//                    it.assroCode.toString(),
+//                    locationItem.assrolLocId.toString(),
+//                    selectedStatus
+//                )
+//            }
 
             // Opsional: Update UI lokal sementara (akan di-refresh otomatis oleh observer viewModel.locationList)
-            locationList[position].status = selectedStatus
+            locationList[position].assrolStatus = selectedStatus
             adapter.notifyItemChanged(position)
         }
         builder.show()

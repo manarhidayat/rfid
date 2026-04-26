@@ -1,11 +1,14 @@
 package com.example.uhf_bt.api
 
 import com.example.uhf_bt.model.AssetOpname
+import com.example.uhf_bt.model.BaseResponse
 import com.example.uhf_bt.model.LoginRequest
 import com.example.uhf_bt.model.LoginResponse
 import com.example.uhf_bt.model.MasterDataItem
+import com.example.uhf_bt.model.NextCodeResponse
 import com.example.uhf_bt.model.Opname
 import com.example.uhf_bt.model.OpnameLocation
+import com.example.uhf_bt.model.OpnameSubmitItem
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
@@ -15,6 +18,7 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Headers
 import retrofit2.http.POST
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 
@@ -31,28 +35,29 @@ interface ApiService {
         @Query("token") queryToken: String?
     ): Call<MutableList<MasterDataItem?>?>?
 
-    @GET("opname/list")    suspend fun getOpnameList(
-        @Query("code") code: String?,
+    @GET("api/opname/")
+    suspend fun getOpnameList(
+        @Query("assro_code") code: String?,
         @Query("start_date") startDate: String?,
         @Query("end_date") endDate: String?
-    ): Response<List<Opname>>
+    ): Response<BaseResponse<List<Opname>>>
 
-    @POST("opname/add")
+    @POST("api/opname/store")
     suspend fun addOpname(
-        @Body opname: Opname
+        @Body request: Map<String, String>
     ): Response<Void> // Atau sesuaikan dengan response API Anda
 
-    @GET("opname/location")
+    @GET("api/opname-location/{id}")
     suspend fun getOpnameLocation(
-        @Query("code") code: String,
-        @Query("search") search: String?
-    ): Response<List<OpnameLocation>>
+        @Path("id") id: String, // Nama "id" di sini harus SAMA dengan {id} di atas
+        @Query("search") search: String? = null
+    ): Response<BaseResponse<List<OpnameLocation>>>
 
-    @GET("opname/list-location")
+    @GET("api/opname-location/master/location/{id}/assets")
     suspend fun getOpnameListLocation(
-        @Query("opname_no") opnameNo: Int,
+        @Path("id") id: String,
         @Query("search") search: String?
-    ): Response<List<AssetOpname>>
+    ): Response<BaseResponse<List<AssetOpname>>>
 
     @GET("opname/report")
     suspend fun getOpnameReport(
@@ -61,17 +66,15 @@ interface ApiService {
         @Query("code") code: String?
     ): Response<List<Opname>>
 
-    @FormUrlEncoded
-    @POST("opname/update-location-status")
-    suspend fun updateOpnameLocationStatus(
-        @Field("code") code: String,
-        @Field("location_id") locationId: Int,
-        @Field("status") status: String
+    @Headers("Content-Type: application/json")
+    @POST("api/opname-location/store")
+    suspend fun updateOpnameLocation(
+        @Body request: Map<String, @JvmSuppressWildcards List<OpnameLocation>>
     ): Response<Void>
 
-    @POST("opname/submit-list-location")
+    @POST("api/opname-part/store")
     suspend fun submitOpnameListLocation(
-        @Body assets: List<AssetOpname>
+        @Body request: Map<String, @JvmSuppressWildcards List<OpnameSubmitItem>>
     ): Response<Void>
 
     @GET("opname/foreign-asset")
@@ -79,4 +82,6 @@ interface ApiService {
         @Query("asset_code") assetCode: String
     ): Response<AssetOpname>
 
+    @GET("api/opname/next-code")
+    suspend fun getNextCode(): Response<NextCodeResponse>
 }

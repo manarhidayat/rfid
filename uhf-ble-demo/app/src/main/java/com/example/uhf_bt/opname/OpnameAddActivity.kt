@@ -15,15 +15,24 @@ import java.util.*
 @AndroidEntryPoint
 class OpnameAddActivity : AppCompatActivity() {
 
+    private lateinit var etCode: EditText
+    private lateinit var etDate: EditText
+
     private val viewModel: OpnameViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_opname_add)
 
-        val etCode = findViewById<EditText>(R.id.et_opname_code) // Pastikan ID ada di layout
-        val etDate = findViewById<EditText>(R.id.et_opname_date)
+        etCode = findViewById<EditText>(R.id.et_opname_code) // Pastikan ID ada di layout
+        etDate = findViewById<EditText>(R.id.et_opname_date)
         val btnSave = findViewById<Button>(R.id.btn_save)
+
+        // Supaya user tidak bisa mengubah kode manual (karena otomatis dari sistem)
+        etCode.isEnabled = false
+
+        // 2. Observasi hasilnya
+        setupObservers()
 
         // Setup Date Picker (Sudah benar)
         etDate.setOnClickListener {
@@ -34,6 +43,24 @@ class OpnameAddActivity : AppCompatActivity() {
                 etDate.setText(dateString)
             }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show()
         }
+
+
+
+        btnSave.setOnClickListener {
+            val code = etCode.text.toString().trim()
+            val date = etDate.text.toString().trim()
+
+            if (code.isNotEmpty() && date.isNotEmpty()) {
+                viewModel.addOpname(code, date)
+            } else {
+                Toast.makeText(this, "Harap isi semua field", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    fun setupObservers() {
+        // 1. Jalankan fungsi ambil kode
+        viewModel.fetchNextCode()
 
         // Observe Result
         viewModel.isSuccess.observe(this) { success ->
@@ -49,15 +76,14 @@ class OpnameAddActivity : AppCompatActivity() {
             }
         }
 
-        btnSave.setOnClickListener {
-            val code = etCode.text.toString().trim()
-            val date = etDate.text.toString().trim()
+        // Jika berhasil mendapatkan kode
+        viewModel.nextCode.observe(this) { code ->
+            etCode.setText(code)
+        }
 
-            if (code.isNotEmpty() && date.isNotEmpty()) {
-                viewModel.addOpname(code, date)
-            } else {
-                Toast.makeText(this, "Harap isi semua field", Toast.LENGTH_SHORT).show()
-            }
+        // Jika terjadi error
+        viewModel.error.observe(this) { message ->
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
         }
     }
 }

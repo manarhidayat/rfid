@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.uhf_bt.model.AssetOpname
 import com.example.uhf_bt.model.Opname
 import com.example.uhf_bt.model.OpnameLocation
+import com.example.uhf_bt.model.OpnameSubmitItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -42,13 +43,22 @@ class OpnameViewModel @Inject constructor(
     private val _foreignAsset = MutableLiveData<AssetOpname>()
     val foreignAsset: LiveData<AssetOpname> = _foreignAsset
 
+    private val _nextCode = MutableLiveData<String>()
+    val nextCode: LiveData<String> get() = _nextCode
+
+    private val _error = MutableLiveData<String>()
+    val error: LiveData<String> get() = _error
+
+    private val _updateStatus = MutableLiveData<Boolean>()
+    val updateStatus: LiveData<Boolean> get() = _updateStatus
+
     fun getOpnameData(code: String? = null, startDate: String? = null, endDate: String? = null) {
         viewModelScope.launch {
             _isLoading.value = true
             try {
                 val response = repository.fetchOpnameList(code, startDate, endDate)
                 if (response.isSuccessful) {
-                    _opnameList.value = response.body() ?: emptyList()
+                    _opnameList.value = response.body()?.data ?: emptyList()
                 } else {
                     _errorMessage.value = "Error: ${response.message()}"
                 }
@@ -65,7 +75,10 @@ class OpnameViewModel @Inject constructor(
             _isLoading.value = true
             try {
                 // Buat object Opname (id dikosongkan jika auto-increment dari server)
-                val newOpname = Opname(id = "", code = code, date = date)
+                val newOpname = mapOf(
+                    "assro_code" to code,
+                    "assro_start_date" to date
+                )
                 val response = repository.addOpname(newOpname)
 
                 if (response.isSuccessful) {
@@ -85,14 +98,14 @@ class OpnameViewModel @Inject constructor(
     fun getOpnameLocation(code: String, search: String? = null) {
         viewModelScope.launch {
             val response = repository.fetchOpnameLocation(code, search)
-            if (response.isSuccessful) _locationList.value = response.body() ?: emptyList()
+            if (response.isSuccessful) _locationList.value = response.body()?.data ?: emptyList()
         }
     }
 
-    fun getOpnameListLocation(opnameNo: Int, search: String? = null) {
+    fun getOpnameListLocation(opnameNo: String, search: String? = null) {
         viewModelScope.launch {
             val response = repository.fetchOpnameListLocation(opnameNo, search)
-            if (response.isSuccessful) _assetList.value = response.body() ?: emptyList()
+            if (response.isSuccessful) _assetList.value = response.body()?.data ?: emptyList()
         }
     }
 
@@ -103,40 +116,48 @@ class OpnameViewModel @Inject constructor(
         }
     }
 
-    fun updateOpnameLocation(opnameCode: String, locationId: Int, newStatus: String) {
+    fun saveLocations(list: List<OpnameLocation>) {
         viewModelScope.launch {
-            _isLoading.value = true
             try {
-                // Panggil repository untuk update status ke API
-                val response = repository.updateOpnameLocationStatus(opnameCode, locationId, newStatus)
+                val response = repository.updateOpnameLocation(list)
                 if (response.isSuccessful) {
-                    // Refresh data setelah berhasil update
-                    getOpnameLocation(opnameCode)
+                    _updateStatus.postValue(true)
                 } else {
-                    _errorMessage.value = "Gagal memperbarui status"
+                    _updateStatus.postValue(false)
                 }
             } catch (e: Exception) {
-                _errorMessage.value = e.localizedMessage
-            } finally {
-                _isLoading.value = false
+                e.printStackTrace()
+                _updateStatus.postValue(false)
             }
         }
     }
 
-    fun submitOpnameListLocation(assets: List<AssetOpname>) {
+    fun submitOpnameListLocation(
+        assets: List<AssetOpname>,
+        assroOid: String,
+        assrolOid: String
+    ) {
         viewModelScope.launch {
-            _isLoading.value = true
             try {
-                val response = repository.submitOpnameListLocation(assets)
+                // Mapping dari AssetOpname ke OpnameSubmitItem
+                val submitItems = assets.map { asset ->
+                    OpnameSubmitItem(
+                        assroOid = assroOid,
+                        assrolOid = assrolOid,
+                        assId = asset.assId,
+                        // "1" jika status Found/Scanned, sesuaikan dengan logic status Anda
+                        status = if (asset.status == "Found") "1" else "0"
+                    )
+                }
+
+                val response = repository.submitOpnameListLocation(submitItems)
                 if (response.isSuccessful) {
-                    _isSuccess.value = true
+                    _isSuccess.postValue(true)
                 } else {
-                    _errorMessage.value = "Failed to submit data"
+                    _errorMessage.postValue("Submit failed: ${response.message()}")
                 }
             } catch (e: Exception) {
-                _errorMessage.value = e.localizedMessage
-            } finally {
-                _isLoading.value = false
+                _errorMessage.postValue("Error: ${e.message}")
             }
         }
     }
@@ -155,6 +176,21 @@ class OpnameViewModel @Inject constructor(
                 _errorMessage.value = e.localizedMessage
             } finally {
                 _isLoading.value = false
+            }
+        }
+    }
+
+    fun fetchNextCode() {
+        viewModelScope.launch {
+            try {
+                val response = repository.getNextCode()
+                if (response.isSuccessful && response.body()?.status == 200) {
+                    _nextCode.value = response.body()?.assroCode
+                } else {
+                    _error.value = "Gagal mengambil kode: ${response.message()}"
+                }
+            } catch (e: Exception) {
+                _error.value = "Terjadi kesalahan: ${e.message}"
             }
         }
     }

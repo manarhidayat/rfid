@@ -29,6 +29,7 @@
 
         <EditText
             android:id="@+id/et_search_asset"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
@@ -38,6 +39,7 @@
             android:textSize="14sp" />
         <Button
             android:id="@+id/btn_search"
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
