@@ -71,6 +71,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTabHost;
 
@@ -170,6 +171,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 startActivity(intent);
             }
         });
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            ActivityCompat.requestPermissions(this, new String[]{
+                Manifest.permission.BLUETOOTH_SCAN,
+                Manifest.permission.BLUETOOTH_CONNECT
+        }, 1);
+        }
     }
 
     @Override

@@ -3,8 +3,10 @@ package com.example.uhf_bt.opname
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -29,9 +31,22 @@ class OpnameDataActivity : AppCompatActivity() {
     private val viewModel: OpnameViewModel by viewModels()
     private val calendar = Calendar.getInstance()
 
+    private lateinit var progressBar: ProgressBar // Tambahkan ini
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressedDispatcher.onBackPressed()
+        return true
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_opname_data)
+
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowHomeEnabled(true)
+            title = "Opname Data"
+        }
 
         // Inisialisasi View
         recyclerView = findViewById(R.id.rv_opname_data)
@@ -40,6 +55,7 @@ class OpnameDataActivity : AppCompatActivity() {
         etStartDate = findViewById(R.id.et_start_date)
         etToDate = findViewById(R.id.et_to_date)
         etSearch = findViewById(R.id.et_search)
+        progressBar = findViewById(R.id.progressBar)
 
         recyclerView.layoutManager = LinearLayoutManager(this)
 
@@ -47,8 +63,7 @@ class OpnameDataActivity : AppCompatActivity() {
         setupDatePicker(etToDate)
 
         // Observe Data dari ViewModel
-//        observeViewModel()
-        loadDummyData()
+        observeViewModel()
 
         // Tombol Search dengan Filter
         btnSearch.setOnClickListener {
@@ -69,6 +84,12 @@ class OpnameDataActivity : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        // Refresh data setiap kali activity tampil kembali ke layar
+        viewModel.getOpnameData()
+    }
+
     private fun observeViewModel() {
         // Load Data Pertama Kali (Tanpa Filter)
         viewModel.getOpnameData()
@@ -87,39 +108,8 @@ class OpnameDataActivity : AppCompatActivity() {
         }
 
         viewModel.isLoading.observe(this) { isLoading ->
-            // Tampilkan progress bar jika ada
+            progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
         }
-    }
-
-    private fun loadDummyData() {
-        // Data dummy disesuaikan dengan struktur model OpnameResponse / OpnameData Anda
-        val dummyList = listOf(
-            Opname(
-                id = "1",
-                code = "OPN-2024-001",
-                date = "2024-01-01"
-            ),
-            Opname(
-                id = "2",
-                code = "OPN-2024-001",
-                date = "2024-01-01"
-            ),
-            Opname(
-                id = "3",
-                code = "OPN-2024-001",
-                date = "2024-01-01"
-            ),
-        )
-
-        // Set adapter secara manual dengan data dummy
-        val adapter = OpnameAdapter(dummyList.toMutableList()) { opname ->
-            val intent = Intent(this, OpnameLocationActivity::class.java)
-            intent.putExtra("EXTRA_OPNAME", opname)
-            startActivity(intent)
-        }
-        recyclerView.adapter = adapter
-
-        Toast.makeText(this, "Menggunakan Data Dummy", Toast.LENGTH_SHORT).show()
     }
 
     private fun setupDatePicker(editText: EditText) {

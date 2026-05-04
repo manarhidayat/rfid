@@ -1,12 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:fitsSystemWindows="true"
+    android:layout_margin="8dp">
+
+    <LinearLayout
+        android:id="@+id/llScan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <Button
+            android:id="@+id/btInventory"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/rbInventorySingle"
+            android:visibility="visible"/>
+
+        <Button
+            android:id="@+id/InventoryLoop"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/rbInventoryLoop" />
+
+        <Button
+            android:id="@+id/btStop"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/title_stop" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnCheckForeign"
+        android:layout_below="@+id/llScan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Check Foreign Asset"
+        android:layout_margin="8dp" />
 
     <LinearLayout
         android:id="@+id/header_container"
+        android:layout_below="@+id/btnCheckForeign"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -29,6 +71,7 @@
 
         <EditText
             android:id="@+id/et_search_asset"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
@@ -38,11 +81,19 @@
             android:textSize="14sp" />
         <Button
             android:id="@+id/btn_search"
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
             android:text="Search" />
     </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_centerInParent="true"/>
 
     <!-- RecyclerView di tengah -->
     <androidx.recyclerview.widget.RecyclerView

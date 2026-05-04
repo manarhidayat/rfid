@@ -30,9 +30,20 @@ class OpnameLocationAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = list[position]
-        holder.tvNo.text = item.no.toString()
-        holder.tvLocation.text = item.location
-        holder.btnStatus.text = item.status
+        holder.tvNo.text = "${position + 1}"
+        holder.tvLocation.text = item.locDesc
+        holder.btnStatus.text = item.assrolStatus
+
+        if(item.assrolStatus == "-") {
+            holder.btnAction.visibility = View.INVISIBLE
+        }else {
+            if(item.assrolStatus == "O") {
+                holder.btnStatus.text = "Open"
+            } else if (item.assrolStatus == "D") {
+                holder.btnStatus.text = "Done"
+            }
+            holder.btnAction.visibility = View.VISIBLE
+        }
 
         holder.btnStatus.setOnClickListener { onStatusClick(position) }
 

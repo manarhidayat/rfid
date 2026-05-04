@@ -15,7 +15,9 @@ class OpnameAdapter(
 ) : RecyclerView.Adapter<OpnameAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val tvNo: TextView = view.findViewById(R.id.tv_no)
         val tvCode: TextView = view.findViewById(R.id.tv_code)
+        val tvDesc: TextView = view.findViewById(R.id.tv_desc)
         val tvDate: TextView = view.findViewById(R.id.tv_date)
     }
 
@@ -27,8 +29,10 @@ class OpnameAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = list[position]
-        holder.tvCode.text = item.code
-        holder.tvDate.text = item.date
+        holder.tvNo.text = "${position + 1}"
+        holder.tvCode.text = item.assroCode
+        holder.tvDate.text = item.assroStartDate
+        holder.tvDesc.text = item.assroDesc
 
         // Set listener klik pada item
         holder.itemView.setOnClickListener {

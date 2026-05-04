@@ -736,7 +736,7 @@ public class UHFReadTagFragment extends Fragment implements View.OnClickListener
                 holder.btnOpenWebView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        openAssetMutationWebView(epcData);
+                        openAssetMutationWebView(epcData, "public/asset/rfidMutation/");
                     }
                 });
             } else {
@@ -749,7 +749,9 @@ public class UHFReadTagFragment extends Fragment implements View.OnClickListener
             holder.btnCopyEPC.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    copyEPCToClipboard(epcData);
+
+                    openAssetMutationWebView(epcData, "public/asset/receipt/");
+//                    copyEPCToClipboard(epcData);
                 }
             });
 
@@ -767,7 +769,7 @@ public class UHFReadTagFragment extends Fragment implements View.OnClickListener
     /**
      * Membuka WebView dengan URL asset mutation
      */
-    private void openAssetMutationWebView(String epc) {
+    private void openAssetMutationWebView(String epc, String urlBase) {
         try {
             // Ambil token dari LoginActivity
             String token = LoginActivity.getToken(mContext);
@@ -782,11 +784,12 @@ public class UHFReadTagFragment extends Fragment implements View.OnClickListener
             com.example.uhf_bt.model.MasterDataItem masterData = mainActivity.findMasterDataByRfidCode(epc);
             
             // Ambil base URL dari ApiClient
-            String baseUrl = ApiClient.getBaseUrl(getActivity());
+//            String baseUrl = ApiClient.getBaseUrl(getActivity());
+            String baseUrl = "https://skht.my.id/mac.approval_trial/";
             
             // Buat URL lengkap dengan parameter master data
             StringBuilder urlBuilder = new StringBuilder();
-            urlBuilder.append(baseUrl).append("public/asset/rfidMutation/").append(epc).append("?token=").append(token);
+            urlBuilder.append(baseUrl).append(urlBase).append(epc).append("?token=").append(token);
             
             // Tambahkan parameter master data jika ditemukan
             if (masterData != null) {

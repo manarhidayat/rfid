@@ -7,6 +7,12 @@
     android:padding="8dp"
     android:gravity="center_vertical">
 
+    <CheckBox
+        android:id="@+id/cb_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" /> <!-- Awalnya sembunyi -->
+
     <TextView
         android:id="@+id/tv_no"
         android:layout_width="25dp"

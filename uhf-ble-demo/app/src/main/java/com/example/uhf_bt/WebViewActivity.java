@@ -2,9 +2,11 @@ package com.example.uhf_bt;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.JavascriptInterface;
+import android.webkit.ValueCallback;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageButton;
@@ -18,6 +20,9 @@ public class WebViewActivity extends Activity {
     private ProgressBar progressBar;
     private TextView tvTitle;
     private ImageButton btnClose;
+
+    private ValueCallback<Uri[]> mUploadMessage;
+    private final static int FILECHOOSER_RESULTCODE = 1;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +49,10 @@ public class WebViewActivity extends Activity {
         webView.getSettings().setUseWideViewPort(true);
         webView.getSettings().setBuiltInZoomControls(true);
         webView.getSettings().setDisplayZoomControls(false);
-        
+        webView.getSettings().setAllowFileAccess(true); // Tambahkan ini agar bisa akses file
+        webView.getSettings().setAllowContentAccess(true); // Tambahkan ini
+
+
         // Tambahkan JavaScript Interface untuk komunikasi dengan web
         webView.addJavascriptInterface(new WebAppInterface(), "Android");
         
@@ -83,7 +91,32 @@ public class WebViewActivity extends Activity {
                 Toast.makeText(WebViewActivity.this, "Error loading page: " + description, Toast.LENGTH_SHORT).show();
             }
         });
-        
+
+        webView.setWebChromeClient(new android.webkit.WebChromeClient() {
+            // Untuk Android 5.0+
+            @Override
+            public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback,
+                                             FileChooserParams fileChooserParams) {
+                // Pastikan tidak ada proses upload yang sedang berjalan
+                if (mUploadMessage != null) {
+                    mUploadMessage.onReceiveValue(null);
+                }
+                mUploadMessage = filePathCallback;
+
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                intent.setType("*/*"); // Set ke "image/*" jika hanya ingin gambar
+
+                Intent chooserIntent = new Intent(Intent.ACTION_CHOOSER);
+                chooserIntent.putExtra(Intent.EXTRA_INTENT, intent);
+                chooserIntent.putExtra(Intent.EXTRA_TITLE, "Pilih File");
+
+                startActivityForResult(chooserIntent, FILECHOOSER_RESULTCODE);
+                return true;
+            }
+        });
+
+
         // Ambil URL dari Intent
         Intent intent = getIntent();
         String url = intent.getStringExtra("url");
@@ -94,6 +127,36 @@ public class WebViewActivity extends Activity {
             Toast.makeText(this, "URL tidak valid", Toast.LENGTH_SHORT).show();
             progressBar.setVisibility(View.GONE);
             finish();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == FILECHOOSER_RESULTCODE) {
+            if (mUploadMessage == null) return;
+
+            Uri[] results = null;
+            if (resultCode == Activity.RESULT_OK) {
+                if (data != null) {
+                    String dataString = data.getDataString();
+                    if (dataString != null) {
+                        results = new Uri[]{Uri.parse(dataString)};
+                    } else if (data.getClipData() != null) {
+                        // Jika user memilih banyak file
+                        int count = data.getClipData().getItemCount();
+                        results = new Uri[count];
+                        for (int i = 0; i < count; i++) {
+                            results[i] = data.getClipData().getItemAt(i).getUri();
+                        }
+                    }
+                }
+            }
+
+            // Kirim data ke WebView
+            mUploadMessage.onReceiveValue(results);
+            mUploadMessage = null; // Reset callback
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
         }
     }
     

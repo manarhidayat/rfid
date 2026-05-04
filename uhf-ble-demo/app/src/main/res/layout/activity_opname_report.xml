@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:fitsSystemWindows="true"
+    android:layout_margin="16dp">
 
     <!-- Top Download Buttons -->
     <LinearLayout
@@ -17,14 +18,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Download PDF"
+            android:text="Export PDF"
             android:layout_marginEnd="4dp"/>
         <Button
             android:id="@+id/btn_download_excel_all"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Download Excel"
+            android:text="Export Excel"
             android:layout_marginStart="4dp"/>
     </LinearLayout>
 
@@ -70,6 +71,38 @@
             android:layout_height="wrap_content"
             android:text="Search" />
     </LinearLayout>
+
+    <!-- Di dalam activity_opname_report.xml -->
+    <LinearLayout
+        android:id="@+id/layout_selection_mode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:padding="8dp">
+
+        <Button
+            android:id="@+id/btn_confirm_export"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Confirm Export"/>
+
+        <Button
+            android:id="@+id/btn_cancel_export"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Cancel"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_gravity="center"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_report"

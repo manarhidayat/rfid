@@ -22,20 +22,19 @@
 
     <Button
         android:id="@+id/btn_status"
-        style="?android:attr/borderlessButtonStyle"
         android:layout_width="80dp"
         android:layout_height="35dp"
-        android:background="#E0E0E0"
-        android:text="Open"
+        android:layout_marginStart="4dp"
+        android:text="-"
         android:textAllCaps="false"
-        android:textSize="12sp" />
+        android:textSize="12sp"/>
 
     <Button
         android:id="@+id/btn_action"
         android:layout_width="80dp"
         android:layout_height="35dp"
         android:layout_marginStart="4dp"
-        android:text="Action"
+        android:text="View"
         android:textAllCaps="false"
         android:textSize="12sp" />
 

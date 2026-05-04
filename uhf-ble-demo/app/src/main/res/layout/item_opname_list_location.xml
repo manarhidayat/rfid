@@ -22,7 +22,7 @@
             android:id="@+id/item_tv_asset_code"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="AST-001"
+            android:text="-"
             android:textStyle="bold"
             android:textColor="@android:color/black" />
 
@@ -30,7 +30,14 @@
             android:id="@+id/item_tv_asset_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Laptop Dell XPS"
+            android:text="-"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/item_tv_prev_loc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
             android:textSize="12sp" />
     </LinearLayout>
 
@@ -46,6 +53,7 @@
         android:id="@+id/item_btn_action"
         android:layout_width="wrap_content"
         android:layout_height="35dp"
+        android:visibility="gone"
         android:text="Action"
         android:textSize="10sp"
         android:textAllCaps="false" />

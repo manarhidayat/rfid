@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:fitsSystemWindows="true"
-    android:padding="16dp">
+    android:layout_margin="16dp">
 
     <!-- Header Info -->
     <TextView
@@ -28,6 +28,7 @@
     <!-- Search Bar -->
     <EditText
         android:id="@+id/et_search_location"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -40,6 +41,7 @@
 
     <Button
         android:id="@+id/btn_search"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
@@ -59,10 +61,31 @@
         <TextView android:layout_width="80dp" android:layout_height="wrap_content" android:text="Action" android:textStyle="bold" android:gravity="center"/>
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_opname_location"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="4dp"/>
+        android:layout_height="match_parent">
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_centerInParent="true"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_opname_location"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/btn_submit"
+            android:layout_marginTop="4dp"/>
+
+        <Button
+            android:id="@+id/btn_submit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:text="SUBMIT"
+            android:backgroundTint="@color/design_default_color_primary"
+            android:textColor="@android:color/white" />
+    </RelativeLayout>
+
 
 </LinearLayout>

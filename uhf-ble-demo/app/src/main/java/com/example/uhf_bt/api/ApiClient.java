@@ -11,7 +11,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
-    public static final String DEFAULT_BASE_URL = "https://skht.my.id/mac.approval_trial/"; // URL default jika belum diatur
+    public static final String DEFAULT_BASE_URL = "http://8.215.68.53/mac.approval_trial"; // URL default jika belum diatur
     public static final String PREF_API_URL = "api_url";
     private static Retrofit retrofit = null;
     

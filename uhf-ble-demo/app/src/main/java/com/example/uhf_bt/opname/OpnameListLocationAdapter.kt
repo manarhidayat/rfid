@@ -18,6 +18,7 @@ class OpnameListLocationAdapter(private val list: List<AssetOpname>) :
         val tvCode: TextView = view.findViewById(R.id.item_tv_asset_code)
         val tvName: TextView = view.findViewById(R.id.item_tv_asset_name)
         val tvStatus: TextView = view.findViewById(R.id.item_tv_status)
+        val tvPrevLoc: TextView = view.findViewById(R.id.item_tv_prev_loc)
         val btnAction: Button = view.findViewById(R.id.item_btn_action)
     }
 
@@ -29,16 +30,46 @@ class OpnameListLocationAdapter(private val list: List<AssetOpname>) :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = list[position]
-        holder.tvNo.text = item.no.toString()
-        holder.tvCode.text = item.assetCode
-        holder.tvName.text = item.assetName
-        holder.tvStatus.text = item.status
+        holder.tvNo.text = "${position + 1}"
+        holder.tvCode.text = item.assRfidCode
+        holder.tvName.text = item.assDesc
+        holder.tvStatus.text = ""
 
         // Warna status
-        when (item.status) {
-            "Found" -> holder.tvStatus.setTextColor(ContextCompat.getColor(holder.itemView.context, android.R.color.holo_green_dark))
-            "Not Found" -> holder.tvStatus.setTextColor(ContextCompat.getColor(holder.itemView.context, android.R.color.holo_red_dark))
-            "Foreign" -> holder.tvStatus.setTextColor(ContextCompat.getColor(holder.itemView.context, android.R.color.holo_orange_dark))
+        if(!item.status.isNullOrEmpty()) {
+            when (item.status) {
+                "1" -> {
+                    holder.tvStatus.text = "Found"
+                    holder.tvPrevLoc.visibility = View.GONE
+                    holder.tvStatus.setTextColor(
+                        ContextCompat.getColor(
+                            holder.itemView.context,
+                            android.R.color.holo_green_dark
+                        )
+                    )
+                }
+                "2" -> {
+                    holder.tvStatus.text = "Not Found"
+                    holder.tvPrevLoc.visibility = View.GONE
+                    holder.tvStatus.setTextColor(
+                        ContextCompat.getColor(
+                            holder.itemView.context,
+                            android.R.color.holo_red_dark
+                        )
+                    )
+                }
+                "3" -> {
+                    holder.tvStatus.text = "Foreign"
+                    holder.tvPrevLoc.visibility = View.VISIBLE
+                    holder.tvPrevLoc.text = item.assLocId
+                    holder.tvStatus.setTextColor(
+                        ContextCompat.getColor(
+                            holder.itemView.context,
+                            android.R.color.holo_orange_dark
+                        )
+                    )
+                }
+            }
         }
 
         holder.btnAction.setOnClickListener {
