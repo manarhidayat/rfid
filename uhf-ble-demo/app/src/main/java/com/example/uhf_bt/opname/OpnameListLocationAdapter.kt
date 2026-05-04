@@ -29,18 +29,16 @@ class OpnameListLocationAdapter(private val list: List<AssetOpname>) :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = list[position]
-//        holder.tvNo.text = item.no.toString()
-        holder.tvCode.text = item.assLocId
-        holder.tvName.text = item.assDesc
+        holder.tvNo.text = item.no.toString()
+        holder.tvCode.text = item.assetCode
+        holder.tvName.text = item.assetName
         holder.tvStatus.text = item.status
 
         // Warna status
-        if(!item.status.isNullOrEmpty()) {
-            when (item.status) {
-                "Found" -> holder.tvStatus.setTextColor(ContextCompat.getColor(holder.itemView.context, android.R.color.holo_green_dark))
-                "Not Found" -> holder.tvStatus.setTextColor(ContextCompat.getColor(holder.itemView.context, android.R.color.holo_red_dark))
-                "Foreign" -> holder.tvStatus.setTextColor(ContextCompat.getColor(holder.itemView.context, android.R.color.holo_orange_dark))
-            }
+        when (item.status) {
+            "Found" -> holder.tvStatus.setTextColor(ContextCompat.getColor(holder.itemView.context, android.R.color.holo_green_dark))
+            "Not Found" -> holder.tvStatus.setTextColor(ContextCompat.getColor(holder.itemView.context, android.R.color.holo_red_dark))
+            "Foreign" -> holder.tvStatus.setTextColor(ContextCompat.getColor(holder.itemView.context, android.R.color.holo_orange_dark))
         }
 
         holder.btnAction.setOnClickListener {

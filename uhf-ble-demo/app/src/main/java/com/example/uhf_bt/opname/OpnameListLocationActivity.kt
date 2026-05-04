@@ -45,8 +45,11 @@ class OpnameListLocationActivity : AppCompatActivity() {
         val opnameData = intent.getSerializableExtra("EXTRA_OPNAME") as? Opname
         val locationData = intent.getSerializableExtra("EXTRA_LOCATION") as? OpnameLocation
 
-        tvCode.text = "Stock Opname: ${opnameData?.assroCode ?: "-"}"
-        tvLocation.text = "Location: ${locationData?.assrolLocId ?: "-"}"
+        tvCode.text = "Stock Opname: ${opnameData?.code ?: "-"}"
+        tvLocation.text = "Location: ${locationData?.location ?: "-"}"
+
+        // 2. Setup Data Dummy
+        prepareDummyData()
 
         // 3. Setup RecyclerView
         rvAsset.layoutManager = LinearLayoutManager(this)
@@ -59,41 +62,31 @@ class OpnameListLocationActivity : AppCompatActivity() {
         }
 
         // Gunakan opnameData?.no (asumsi property .no ada di model Opname)
-        locationData?.let { viewModel.getOpnameListLocation(it.assrolLocId ?: "") }
+//        opnameData?.let { viewModel.getOpnameListLocation(it.id?.toInt() ?: 0) }
 
         findViewById<Button>(R.id.btn_search).setOnClickListener {
             val query = findViewById<EditText>(R.id.et_search_asset).text.toString().trim()
-            opnameData?.let { data -> viewModel.getOpnameListLocation(locationData?.assrolLocId ?: "", query) }
+            opnameData?.let { data -> viewModel.getOpnameListLocation(opnameData.id?.toInt() ?: 0, query) }
         }
 
         // Update listener button submit
         btnSubmit.setOnClickListener {
-            val assroOid = opnameData?.assroOid // Gunakan OID, bukan Code jika API minta UUID
-            val assrolOid = locationData?.assrolOid
-
-            if (assetList.isNotEmpty() && assroOid != null && assrolOid != null) {
-                viewModel.submitOpnameListLocation(assetList, assroOid, assrolOid)
+            if (assetList.isNotEmpty()) {
+                viewModel.submitOpnameListLocation(assetList)
             } else {
-                if (assetList.isEmpty()) {
-                    Toast.makeText(this, "No data to submit", Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(this, "Missing Opname/Location ID", Toast.LENGTH_SHORT).show()
-                }
+                Toast.makeText(this, "No data to submit", Toast.LENGTH_SHORT).show()
             }
-
         }
-
-        observe()
     }
 
-    private fun observe() {
+    private fun gobserve() {
         viewModel.foreignAsset.observe(this) { asset ->
             // Tambahkan ke list dan beritahu adapter
             assetList.add(asset)
             rvAsset.adapter?.notifyItemInserted(assetList.size - 1)
             rvAsset.scrollToPosition(assetList.size - 1)
 
-            Toast.makeText(this, "Foreign Asset Added: ${asset.assCode}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Foreign Asset Added: ${asset.assetName}", Toast.LENGTH_SHORT).show()
         }
 
         viewModel.isSuccess.observe(this) { success ->
@@ -124,4 +117,10 @@ class OpnameListLocationActivity : AppCompatActivity() {
         }
     }
 
+    private fun prepareDummyData() {
+        assetList.add(AssetOpname(1, "AST-2023-001", "Macbook Pro M2", "Found"))
+        assetList.add(AssetOpname(2, "AST-2023-002", "Monitor Dell 24 Inch", "Not Found"))
+        assetList.add(AssetOpname(3, "AST-2023-099", "Keyboard Mechanical (Unknown)", "Foreign"))
+        assetList.add(AssetOpname(4, "AST-2023-005", "Office Chair", "Found"))
+    }
 }

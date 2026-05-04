@@ -2,7 +2,6 @@ package com.example.uhf_bt.di
 
 import android.content.Context
 import android.preference.PreferenceManager
-import com.example.uhf_bt.LoginActivity
 import com.example.uhf_bt.api.ApiClient
 import com.example.uhf_bt.api.ApiClient.DEFAULT_BASE_URL
 import com.example.uhf_bt.api.ApiService
@@ -29,29 +28,9 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(
-        loggingInterceptor: HttpLoggingInterceptor,
-        @ApplicationContext context: Context // Tambahkan context di sini
-    ): OkHttpClient {
-
+    fun provideOkHttpClient(loggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
-            .addInterceptor { chain ->
-                val original = chain.request()
-                // Ambil token yang disimpan di LoginActivity (sesuaikan key-nya, misal "token")
-
-                // Ambil token dari LoginActivity
-                val token = LoginActivity.getToken(context)
-
-                val requestBuilder = original.newBuilder()
-                if (!token.isNullOrEmpty()) {
-                    // Tambahkan header Authorization
-                    requestBuilder.header("Authorization", "Bearer $token")
-                }
-
-                val request = requestBuilder.method(original.method, original.body).build()
-                chain.proceed(request)
-            }
             .build()
     }
 
@@ -80,6 +59,4 @@ object NetworkModule {
     fun provideApiService(retrofit: Retrofit): ApiService {
         return retrofit.create(ApiService::class.java)
     }
-
-
 }

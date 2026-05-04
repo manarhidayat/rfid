@@ -100,19 +100,9 @@ class OpnameReportActivity : AppCompatActivity() {
 
     private fun setupRecyclerView() {
         reportList = listOf(
-            Opname(
-                "1", "OPN-20231001-001",
-                assroAddBy = TODO(),
-                assroAddDate = TODO(),
-                assroUpdBy = TODO(),
-                assroUpdDate = TODO(),
-                assroCode = TODO(),
-                assroDesc = TODO(),
-                assroStartDate = TODO(),
-                assroEndDate = TODO(),
-                assroStatus = TODO(),
-                assroDt = TODO()
-            )
+            Opname("1", "OPN-20231001-001", "2023-10-01"),
+            Opname("2", "OPN-20231002-005", "2023-10-02"),
+            Opname("3", "OPN-20231005-012", "2023-10-05")
         )
 
         rvReport.layoutManager = LinearLayoutManager(this)
@@ -150,8 +140,8 @@ class OpnameReportActivity : AppCompatActivity() {
 
             data.forEachIndexed { index, opname ->
                 table.addCell((index + 1).toString())
-                table.addCell(opname.assroCode)
-                table.addCell(opname.assroStartDate)
+                table.addCell(opname.code)
+                table.addCell(opname.date)
             }
 
             document.add(table)
@@ -179,8 +169,8 @@ class OpnameReportActivity : AppCompatActivity() {
             data.forEachIndexed { index, opname ->
                 val row = sheet.createRow(index + 1)
                 row.createCell(0).setCellValue((index + 1).toDouble())
-                row.createCell(1).setCellValue(opname.assroCode)
-                row.createCell(2).setCellValue(opname.assroStartDate)
+                row.createCell(1).setCellValue(opname.code)
+                row.createCell(2).setCellValue(opname.date)
             }
 
             val path = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)?.absolutePath

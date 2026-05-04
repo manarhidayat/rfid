@@ -30,9 +30,9 @@ class OpnameLocationAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = list[position]
-//        holder.tvNo.text = item.no.toString()
-        holder.tvLocation.text = item.assrolLocId
-        holder.btnStatus.text = item.assrolStatus
+        holder.tvNo.text = item.no.toString()
+        holder.tvLocation.text = item.location
+        holder.btnStatus.text = item.status
 
         holder.btnStatus.setOnClickListener { onStatusClick(position) }
 

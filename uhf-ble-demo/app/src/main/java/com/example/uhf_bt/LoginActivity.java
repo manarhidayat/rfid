@@ -1,7 +1,5 @@
 package com.example.uhf_bt;
 
-import static com.example.uhf_bt.api.ApiClient.DEFAULT_BASE_URL;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -114,7 +112,7 @@ public class LoginActivity extends BaseActivity {
                     LoginResponse loginResponse = response.body();
                     if (loginResponse.getStatus() == 200) {
                         // Login berhasil
-                        showToast(loginResponse.getMessage());
+                        showToast(loginResponse.getMessage() + " kcoak");
 
                         // Simpan token jika diperlukan
                         saveToken(loginResponse.getToken());
@@ -173,7 +171,7 @@ public class LoginActivity extends BaseActivity {
         
         // Ambil URL yang tersimpan (jika ada)
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String savedUrl = prefs.getString(PREF_API_URL, DEFAULT_BASE_URL);
+        String savedUrl = prefs.getString(PREF_API_URL, "");
         if (!TextUtils.isEmpty(savedUrl)) {
             etApiUrl.setText(savedUrl);
         }
