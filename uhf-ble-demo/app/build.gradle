@@ -40,6 +40,33 @@ android {
         }
     }
 
+    flavorDimensions "version"
+
+    productFlavors {
+        uhf1 {
+            dimension "version"
+            applicationId "com.example.uhf_bt.uhf1"
+            versionCode 1
+            versionName "1.0-uhf1"
+            // Variabel untuk digunakan di Manifest
+            manifestPlaceholders = [
+                    appLabel: "UHF 1",
+                    fileProviderAuthority: "com.example.uhf_bt.uhf1.fileprovider"
+            ]
+        }
+        uhf2 {
+            dimension "version"
+            applicationId "com.example.uhf_bt.uhf2"
+            versionCode 1
+            versionName "1.0-uhf2"
+            // Variabel untuk digunakan di Manifest
+            manifestPlaceholders = [
+                    appLabel: "UHF 2",
+                    fileProviderAuthority: "com.example.uhf_bt.uhf2.fileprovider"
+            ]
+        }
+    }
+
     buildTypes {
         release {
             signingConfig signingConfigs.release
@@ -50,8 +77,17 @@ android {
 
         // 自定义apk名称
         android.applicationVariants.all { variant ->
-            variant.outputs.all {
-                outputFileName = "UHF-ble_v${defaultConfig.versionName}.apk"
+            variant.outputs.all { output ->
+                // Mengambil nama flavor (uhf1 atau uhf2)
+                def flavor = variant.productFlavors[0].name
+                // Mengambil build type (release atau debug)
+                def buildType = variant.buildType.name
+                // Mengambil version name dari flavor
+                def versionName = variant.versionName
+
+                // Format: UHF-ble_uhf1_v1.0-uhf1_release.apk
+//                outputFileName = "UHF-ble_${flavor}_v${versionName}_${buildType}.apk"
+                outputFileName = "UHF-ble_${flavor}_v${versionName}.apk"
             }
         }
     }

@@ -498,10 +498,12 @@ class OpnameReportActivity : AppCompatActivity() {
             notificationManager.createNotificationChannel(channel)
         }
 
+        val authority = "${applicationContext.packageName}.fileprovider"
         // Mendapatkan URI file menggunakan FileProvider
         val uri: Uri = FileProvider.getUriForFile(
             this,
-            "com.example.uhf_bt.fileprovider",
+//            "com.example.uhf_bt.fileprovider",
+            authority,
             file
         )
 
