@@ -1,9 +1,13 @@
 package com.example.uhf_bt.fragment;
 
+import static com.example.uhf_bt.api.ApiClient.DEFAULT_BASE_URL;
+import static com.example.uhf_bt.api.ApiClient.PREF_API_URL;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.ClipboardManager;
 import android.content.ClipData;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
@@ -11,6 +15,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.os.SystemClock;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -785,8 +790,10 @@ public class UHFReadTagFragment extends Fragment implements View.OnClickListener
             
             // Ambil base URL dari ApiClient
 //            String baseUrl = ApiClient.getBaseUrl(getActivity());
-            String baseUrl = "https://skht.my.id/mac.approval_trial/";
-            
+//            String baseUrl = "https://skht.my.id/mac.approval_trial/";
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            String baseUrl = prefs.getString(PREF_API_URL, DEFAULT_BASE_URL);
+
             // Buat URL lengkap dengan parameter master data
             StringBuilder urlBuilder = new StringBuilder();
             urlBuilder.append(baseUrl).append(urlBase).append(epc).append("?token=").append(token);
