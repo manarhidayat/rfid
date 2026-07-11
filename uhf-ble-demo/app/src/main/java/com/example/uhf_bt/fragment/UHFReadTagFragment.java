@@ -54,8 +54,10 @@ import com.rscja.utility.StringUtility;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -89,6 +91,7 @@ public class UHFReadTagFragment extends Fragment implements View.OnClickListener
     final int FLAG_SUCCESS = 10;//成功
     final int FLAG_FAIL = 11;//失败
     private long mStrTime;
+    private Button btnBulkMutation, btnBulkReceipt;
 
     Handler handler = new Handler(Looper.getMainLooper()) {
         @Override
@@ -204,6 +207,16 @@ public class UHFReadTagFragment extends Fragment implements View.OnClickListener
         tv_total = (TextView) mContext.findViewById(R.id.tv_total);
         tv_time = (TextView) mContext.findViewById(R.id.tv_time);
         etTime = (EditText) mContext.findViewById(R.id.etTime);
+        btnBulkMutation = mContext.findViewById(R.id.btnBulkMutation);
+        btnBulkReceipt = mContext.findViewById(R.id.btnBulkReceipt);
+
+        btnBulkMutation.setOnClickListener(v -> {
+            processSelectedEpc("public/asset/rfidMutation/");
+        });
+
+        btnBulkReceipt.setOnClickListener(v -> {
+            processSelectedEpc("public/asset/receipt/");
+        });
 
         InventoryLoop.setOnClickListener(this);
         btInventory.setOnClickListener(this);
@@ -266,6 +279,26 @@ public class UHFReadTagFragment extends Fragment implements View.OnClickListener
         });
 
         clearData();
+    }
+
+    private void processSelectedEpc(String urlPath) {
+        if (selectedEpcSet.isEmpty()) {
+            Toast.makeText(mContext, "Pilih tag terlebih dahulu", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Gabungkan Set menjadi string dipisahkan koma
+        StringBuilder sb = new StringBuilder();
+        String prefix = "";
+        for (String epc : selectedEpcSet) {
+            sb.append(prefix);
+            sb.append(epc);
+            prefix = ",";
+        }
+
+        String combinedEpc = sb.toString();
+        // Panggil fungsi webview yang sudah ada
+        openAssetMutationWebView(combinedEpc, urlPath);
     }
 
     private CheckBox cbFilter;
@@ -647,6 +680,9 @@ public class UHFReadTagFragment extends Fragment implements View.OnClickListener
         showToast(getString(resId));
     }
     //-----------------------------
+
+    private Set<String> selectedEpcSet = new HashSet<>();
+
     private int  selectIndex=-1;
     public final class ViewHolder {
         public TextView tvEPCTID;
@@ -664,6 +700,7 @@ public class UHFReadTagFragment extends Fragment implements View.OnClickListener
         public TextView tvAssServiceDate;
         public TextView tvAssRefPo;
         public TextView tvAssRefRcpt;
+        public CheckBox cbSelect;
     }
 
     public class MyAdapter extends BaseAdapter {
@@ -704,6 +741,7 @@ public class UHFReadTagFragment extends Fragment implements View.OnClickListener
                 holder.tvAssServiceDate = (TextView) convertView.findViewById(R.id.tvAssServiceDate);
                 holder.tvAssRefPo = (TextView) convertView.findViewById(R.id.tvAssRefPo);
                 holder.tvAssRefRcpt = (TextView) convertView.findViewById(R.id.tvAssRefRcpt);
+                holder.cbSelect = (CheckBox) convertView.findViewById(R.id.cbSelectTag);
                 
                 convertView.setTag(holder);
             } else {
@@ -716,6 +754,7 @@ public class UHFReadTagFragment extends Fragment implements View.OnClickListener
 
             // Set click listener untuk button WebView
             final String epcData = (String) tagList.get(position).get(MainActivity.TAG_DATA);
+            holder.tvEPCTID.setText(epcData);
             
             // Check if EPC exists in master data
             MainActivity mainActivity = (MainActivity) getActivity();
@@ -749,6 +788,22 @@ public class UHFReadTagFragment extends Fragment implements View.OnClickListener
                 holder.layoutMasterData.setVisibility(View.GONE);
                 holder.btnOpenWebView.setVisibility(View.GONE);
             }
+
+            // Reset listener agar tidak konflik saat recycling view
+            holder.cbSelect.setOnCheckedChangeListener(null);
+            // Set status checked berdasarkan set
+            holder.cbSelect.setChecked(selectedEpcSet.contains(epcData));
+
+            holder.cbSelect.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (isChecked) {
+                        selectedEpcSet.add(epcData);
+                    } else {
+                        selectedEpcSet.remove(epcData);
+                    }
+                }
+            });
 
             // Set click listener untuk button Copy EPC
             holder.btnCopyEPC.setOnClickListener(new View.OnClickListener() {
