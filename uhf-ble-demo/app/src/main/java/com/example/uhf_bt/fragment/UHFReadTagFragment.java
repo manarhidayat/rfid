@@ -150,6 +150,24 @@ public class UHFReadTagFragment extends Fragment implements View.OnClickListener
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_uhfread_tag, container, false);
         initFilter(view);
+
+//        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                HashMap<String,String> tagMap=null;
+//                tagMap = new HashMap<>();
+//                tagMap.put(MainActivity.TAG_EPC, "xxx");
+//                tagMap.put(MainActivity.TAG_COUNT, String.valueOf(1));
+//                tagList.add(tagMap);
+//                tagMap = new HashMap<>();
+//                tagMap.put(MainActivity.TAG_EPC, "yyyy");
+//                tagMap.put(MainActivity.TAG_COUNT, String.valueOf(1));
+//                tagList.add(tagMap);
+//
+//                adapter.notifyDataSetChanged();
+//            }
+//        }, 2000);
+
         return view;
     }
 
@@ -797,10 +815,11 @@ public class UHFReadTagFragment extends Fragment implements View.OnClickListener
             holder.cbSelect.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    String epcSelected = (String) tagList.get(position).get(MainActivity.TAG_EPC);
                     if (isChecked) {
-                        selectedEpcSet.add(epcData);
+                        selectedEpcSet.add(epcSelected);
                     } else {
-                        selectedEpcSet.remove(epcData);
+                        selectedEpcSet.remove(epcSelected);
                     }
                 }
             });
@@ -810,8 +829,8 @@ public class UHFReadTagFragment extends Fragment implements View.OnClickListener
                 @Override
                 public void onClick(View v) {
 
-                    openAssetMutationWebView(epcData, "public/asset/receipt/");
-//                    copyEPCToClipboard(epcData);
+//                    openAssetMutationWebView(epcData, "public/asset/receipt/");
+                    copyEPCToClipboard(epcData);
                 }
             });
 
@@ -890,7 +909,7 @@ public class UHFReadTagFragment extends Fragment implements View.OnClickListener
             }
             
             String url = urlBuilder.toString();
-            Log.d(TAG, "Opening WebView with URL: " + url);
+            Log.e(TAG, "Opening WebView with URL: " + url);
             
             // Buka WebViewActivity dengan URL
             Intent intent = new Intent(mContext, WebViewActivity.class);
